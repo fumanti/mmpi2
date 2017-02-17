@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request as Request;
 
 class AuthController extends Controller {
 
@@ -32,7 +33,106 @@ class AuthController extends Controller {
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 
-		$this->middleware('guest', ['except' => 'getLogout']);
+		$this->middleware('guest', ['except' => ['getLogout', 'getRegister', 'postRegister', 'getUsers', 'updateUser', 'elimina']]);
+	}
+
+	public function getRegister()
+	{
+		if($this->auth->check() && $this->auth->user()->admin)
+		{
+			return view('auth.register');
+		}
+		else
+		{
+			return view('auth.login');
+		}
+
+	}
+
+	public function postRegister(Request $request)
+	{
+		if($this->auth->check() && $this->auth->user()->admin)
+		{
+			$validator = $this->registrar->validator($request->all());
+
+			if ($validator->fails())
+			{
+				$this->throwValidationException(
+					$request, $validator
+				);
+			}
+
+			$this->registrar->create($request->all());
+
+			$users = $this->auth->user()->orderBy('name', 'asc')->get();
+			return view('auth.users', compact('users'));
+		}
+		else
+		{
+			return view('auth.login');
+		}
+	}
+
+	public function getUsers($id = null) 
+	{
+		
+		if($this->auth->check() && $this->auth->user()->admin)
+		{
+			if ($id){
+				$user = $this->auth->user()->get()->find($id);
+				return view('auth.user', compact('user'));
+			} else {
+				$users = $this->auth->user()->orderBy('name', 'asc')->get();
+				return view('auth.users', compact('users'));
+			} 
+				
+		}
+		else
+		{
+			return view('auth.login');
+		}
+		
+	}
+
+	public function updateUser(Request $request)
+	{
+		if($this->auth->check() && $this->auth->user()->admin)
+		{
+			 $validator = $this->registrar->validator($request->all());
+
+			 if ($validator->fails())
+			 {
+			 	$this->throwValidationException(
+			 		$request, $validator
+			 	);
+			 }
+
+			$this->registrar->update($request->all());
+		}
+		$users = $this->auth->user()->orderBy('name', 'asc')->get();
+		return view('auth.users', compact('users'));
+	}
+
+	public function elimina($id) 
+	{
+		
+		if($this->auth->check() && $this->auth->user()->admin)
+		{
+			if ($id){
+				$user = $this->auth->user()->find($id);
+				$date = date_create();
+				$user->email .='_'.date_timestamp_get($date);
+				$user->save(); 
+				$user->delete($id);
+				$users = $this->auth->user()->orderBy('name', 'asc')->get();
+				return view('auth.users', compact('users'));
+			}	
+		}
+		else
+		{
+			return view('auth.login');
+		}
+		
 	}
 
 }

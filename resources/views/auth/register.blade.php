@@ -2,58 +2,78 @@
 
 @section('content')
 <div class="container-fluid">
-	<div class="row">
+	<div class="row-fluid">
+	    <ul class="breadcrumb">
+	        <li><a href="{{ url('/') }}">Home</a></li>
+	        <li><a href="{{url('/auth/users')}}">Utenti registrati</a></li>
+	        <li class="active"><a href="{{url('/auth/register')}}">Nuovo utente</a></li>
+	    </ul>
+	</div>	
+	<div class="row-fluid">
 		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Register</div>
+			<div class="panel panel-primary">
+				<div class="panel-heading">Nuovo utente</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
+							<strong class="fa fa-meh-o fa-2x">&nbsp;Verificare i dati inseriti.</strong><br>
 							<ul>
 								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
+									<li class="fa fa-exclamation-circle">&nbsp;{{ $error }}</li><br>
 								@endforeach
 							</ul>
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/register') }}">
+					<form class="form-horizontal" method="POST" action="{{ url('/auth/register') }}">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">Name</label>
+							<label class="col-md-4 control-label">Nome e cognome</label>
 							<div class="col-md-6">
-								<input type="text" class="form-control" name="name" value="{{ old('name') }}">
+								<input type="text" class="form-control" name="name">
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
+							<label class="col-md-4 control-label">Indirizzo e-Mail</label>
 							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+								<input type="email" class="form-control" name="email">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Amministratore</label>
+							<div class="col-md-6">
+								<input type="checkbox" class="checkbox" name="admin">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Max numero test</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="max_test" placeholder="Illimitati">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" placeholder="Inserire la password">
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">Confirm Password</label>
+							<label class="col-md-4 control-label">Conferma Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password_confirmation">
+								<input type="password" class="form-control" name="password_confirmation" placeholder="Inserire nuovamente la password">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Register
-								</button>
+								<button type="submit" class="btn btn-action btn-info"><i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Salva</button>
+								<a href="{{url('/auth/users')}}" class="btn btn-action btn-default"><i class="fa fa-undo"></i>&nbsp;&nbsp;Annulla</a>
 							</div>
 						</div>
 					</form>

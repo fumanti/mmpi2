@@ -33,4 +33,16 @@ class HomeController extends Controller {
 		return view('home');
 	}
 
+	/**
+	* Mostra il form di registrazione nuovo utente
+	*
+	*@return Response
+	*/
+	public function register()
+	{
+		return view('auth/register');
+		
+	}
+
+
 }

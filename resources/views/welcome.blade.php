@@ -1,8 +1,9 @@
 <html>
 	<head>
-		<title>Laravel</title>
-		
+		<title>web-mmpi2</title>
+				
 		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+		<link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" >
 
 		<style>
 			body {
@@ -25,6 +26,12 @@
 			.content {
 				text-align: center;
 				display: inline-block;
+				padding:20px;
+				border-radius: 10px 10px 10px 10px;
+				border-color: Gainsboro;
+				border-style: solid;
+				border-width: 0.25pt;
+				background-color: WhiteSmoke;
 			}
 
 			.title {
@@ -40,8 +47,8 @@
 	<body>
 		<div class="container">
 			<div class="content">
-				<div class="title">Laravel 5</div>
-				<div class="quote">{{ Inspiring::quote() }}</div>
+				<div class="title"><i class="fa fa-lock"></i>&nbsp;Area Riservata&nbsp;<i class="fa fa-lock"></i></div>
+				<div class="quote">Accesso solo autorizzati</div>
 			</div>
 		</div>
 	</body>
