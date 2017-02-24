@@ -49,7 +49,7 @@
 									<td class="col-md-1">{{$test->nome}}</td>
 									<td class="col-md-1">{{ $test->data_nascita}}</td>
 									<td class="col-md-1">{{ $test->data_somministrazione}}</td>
-									@if(Auth::user()->admin)<td class="col-md-1">{{ $test->user->name}}</td>@endif
+									@if(Auth::user()->admin)<td class="col-md-1">@if($test->user){{ $test->user->name }}@endif</td>@endif
 									<td class="col-md-2">
 										<a class="btn btn-action btn-default btn-sm" href="{{ url('test/'.$test->id) }}"><i class="glyphicon glyphicon-search"></i> &nbsp; Dettaglio </a>
 										<a class="btn btn-action btn-danger btn-sm" href="{{ url('test/elimina/'.$test->id) }}" onclick="return confirm('ATTENZIONE:\n\n vuoi eliminare il test di {{$test->cognome.' '.$test->nome }} ?')"><i class="glyphicon glyphicon-trash"></i> &nbsp; Elimina </a>

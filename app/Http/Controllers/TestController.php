@@ -43,7 +43,7 @@ class TestController extends Controller {
 			// } else {
 			// 	$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(5);
 			// }
-			$tests = Test::with('user')->paginate(5);
+			$tests = Test::with(['user' => function($u){$u->withTrashed();}])->paginate(15);
 			$filter = 'Tutti i test';
 			session(['filter'=>$filter]);
 			return view ('test.index', compact('tests', 'filter'));
@@ -53,7 +53,7 @@ class TestController extends Controller {
 	public function user(){
 		$filter = 'I miei test';
 		session(['filter'=>$filter]);
-		$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(5);
+		$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(15);
 		return view ('test.index', compact('tests', 'filter'));
 	}
 
