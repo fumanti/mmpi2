@@ -8,7 +8,7 @@
 	<div class="row-fluid">
 	    <ul class="breadcrumb">
 	        <li><a href="{{ url('/') }}">Home</a></li>
-	        <li><a href="{{ session('filter')=='Tutti i test' ? url('/test/all') : url('/test') }}">Test eseguiti</a></li>
+	        <li><a href="{{ session('owner')=='all' ? url('/test/all') : url('/test') }}">Test eseguiti</a></li>
 	        <li><a href="{{ url('test/'.$test->id) }}">Dettaglio test</a></li>
 	        <li class="active"><a href="{{ url('test/'.$test->id.'/edit') }}">Modifica dati paziente</a>
 	    </ul>

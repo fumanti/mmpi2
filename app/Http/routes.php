@@ -30,10 +30,13 @@ Route::controllers([
 ]);
 
 
-Route::get('test/elimina/{id}', ['middleware'=>'auth', 'uses'=>'TestController@elimina']);
+Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@index']);
+// Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
+Route::post('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
+// Route::post('test/user', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
+// Route::get('test/all', ['middleware'=>'admin', 'uses'=>'TestController@index']);
 Route::get('test/nuovo', ['middleware'=>'auth', 'uses'=>'TestController@nuovo']);
-Route::get('test/all', ['middleware'=>'admin', 'uses'=>'TestController@index']);
-Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@user']);
+Route::get('test/elimina/{id}', ['middleware'=>'auth', 'uses'=>'TestController@elimina']);
 //Route::get('test/{id_user?}', ['middleware'=>'admin', 'uses'=>'TestController@index']);
 Route::get('test/{id}', ['middleware'=>'auth', 'uses'=>'TestController@show']);
 Route::get('test/{id}/export', ['middleware'=>'auth', 'uses'=>'TestController@export']);

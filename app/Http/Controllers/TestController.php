@@ -18,43 +18,130 @@ use Auth;
 use Request;
 use Input;
 use Session;
+use Cache;
 
 class TestController extends Controller {
 
 	public function index()
 	{
-		// if (Request::ajax()){
-		// 	$data = Input::all();
-  //         	$id_user = $data['id_user'];
-  //         	if (strlen($id_user)>0) {
-		// 		$tests = Test::where('id_user', '=', $id_user)->paginate(5);
-  //         	} else {
-  //         		$tests = Test::with('user')->paginate(5);
-		// 	}
-		// 	return view ('test.grid', compact('tests'));
-		// } else {
-			// $id_user = 1;
-			// if (Auth::user()->admin){
-			// 	if (is_null($id_user)){
-			// 		$tests = Test::with('user')->paginate(5);
-			// 	} else {
-			// 		$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(5);
-			// 	}
-			// } else {
-			// 	$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(5);
-			// }
-			$tests = Test::with(['user' => function($u){$u->withTrashed();}])->paginate(15);
-			$filter = 'Tutti i test';
-			session(['filter'=>$filter]);
-			return view ('test.index', compact('tests', 'filter'));
-		//}	
+		session(['gruppi_scale'=>GruppoScala::all()]);
+		session(['scale'=>Scala::orderBy('id')->get()]);
+
+		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->where('id_user', '=', Auth::user()->id)->paginate(15);
+		$data = ['owner' => session('owner') ?:'user', 'search' => '', 'sort' => 'id', 'dir' => 'asc', 'page' => 1 ];
+		// 	'owner' => session('owner')?:'user', 
+		// 	'search' => session('search')?:'',
+		// 	'sort' => session('sort')?:'id', 
+		// 	'dir' => session('dir')?:'asc',
+		// 	'page' => session('page')?:1
+		// ];
+
+		$tests =  $this->getTests($data);
+		//$owner = $data['owner'];
+		//session(['owner'=>$owner]);
+		return view ('test.index', compact('tests')); //, 'owner'));
 	}
 
-	public function user(){
-		$filter = 'I miei test';
-		session(['filter'=>$filter]);
+/*	public function user(){
+
+		$owner = 'mine';
+		session(['owner'=>$owner]);
 		$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(15);
-		return view ('test.index', compact('tests', 'filter'));
+		return view ('test.index', compact('tests', 'owner'));
+	}
+*/
+	public function getList()
+	{
+		if(Request::ajax()) {
+          	$data = Input::all();		        
+		}
+
+		// $owner = 'user';
+		// $search = '';
+		// $sort = 'id';
+		// $dir = 'asc';
+		// $page = 1;
+
+		// $where = '';
+
+			// if (array_key_exists('owner', $data)) {
+		 //  		$owner = $data['owner'];
+	  //       }
+
+	  //       if((array_key_exists('sort', $data) && !is_null($data['sort'])) 
+			// &&(array_key_exists('dir', $data) && !is_null($data['dir']))) 
+	  //       {
+	  //       	$sort = $data['sort'];
+	  //       	$dir = $data['dir'];
+			// }
+
+			// if(array_key_exists('search', $data) && !is_null($data['search']) && strlen($data['search'])>0) {
+			// 	$search = $data['search'];
+			// }
+			
+			// $where = ($owner == 'user') ? 'id_user = '.Auth::user()->id : '';
+			// $where = $where.(strlen($where)>0 ? ' and ' : '').'(cognome like \''.$search.'%\' or nome like \''.$search.'%\')';
+
+			// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->whereRaw(strlen($where)>0?$where:'1 = 1')->orderBy($sort, $dir)->paginate(15);
+			
+			// if (array_key_exists('page', $data)){
+			// 	$page = $data['page'];
+			// }
+
+			// session(['owner'=>$owner]);
+			// session(['search'=>$search]);
+			// session(['sort'=>$sort]);
+			// session(['dir'=>$dir]);
+			// session(['page'=>$page]);
+			// session(['where'=>$where]);
+		$tests =  $this->getTests($data); //($owner, $search, $sort, $dir, $page, $where);
+
+		return view ('test.lista_test', compact('tests')); // , 'owner')); //, 'search', 'sort', 'dir'));
+	}
+
+
+	public function getTests($data)
+	{
+		$owner = 'user';
+		$search = '';
+		$sort = 'id';
+		$dir = 'asc';
+		$page = 1;
+
+		$where = '';
+
+		if (array_key_exists('owner', $data)) {
+	  		$owner = $data['owner'];
+        }
+
+        if((array_key_exists('sort', $data) && !is_null($data['sort'])) 
+		&&(array_key_exists('dir', $data) && !is_null($data['dir']))) 
+        {
+        	$sort = $data['sort'];
+        	$dir = $data['dir'];
+		}
+
+		if(array_key_exists('search', $data) && !is_null($data['search']) && strlen($data['search'])>0) {
+			$search = $data['search'];
+		}
+		
+		$where = ($owner == 'user') ? 'id_user = '.Auth::user()->id : '';
+		$where = $where.(strlen($where)>0 ? ' and ' : '').'(cognome like \''.$search.'%\' or nome like \''.$search.'%\')';
+
+		$tests = Test::with(['user' => function($u){$u->withTrashed();}])->whereRaw(strlen($where)>0?$where:'1 = 1')->orderBy($sort, $dir)->paginate(15);
+		
+		if (array_key_exists('page', $data)){
+			$page = $data['page'];
+		}
+
+		session(['owner'=>$owner]);
+		session(['search'=>$search]);
+		session(['sort'=>$sort]);
+		session(['dir'=>$dir]);
+		session(['page'=>$page]);
+		session(['where'=>$where]);
+
+		return $tests;
 	}
 
     /**
@@ -65,6 +152,12 @@ class TestController extends Controller {
      */
     public function show($id)
     {
+    	// Elimina dati sessione per la ricerca
+    	session()->forget('search');
+    	session()->forget('sort');
+    	session()->forget('dir');
+    	session()->forget('page');
+
     	$test = Test::find($id);
 
     	if (is_null($test) || (($test->id_user != Auth::user()->id) && !Auth::user()->admin ))
@@ -72,8 +165,18 @@ class TestController extends Controller {
     		// qui mettere la view con le risposte da riempire
     		return redirect('test');
     	}
-    	
-    	$risposte = Risposta::where('test_id', '=', $test->id)->get();
+
+		/*		
+		$gruppi_scale = Cache::remember('gruppi_scale', 30*60, function() {
+	        return GruppoScala::all();
+	    });
+
+		$scale = Cache::remember('scale', 30*60, function() {
+	        return Scala::orderBy('id')->get();
+	    });
+		*/
+
+    	$risposte = Risposta::where('test_id', '=', $test->id)->orderBy('item_id')->get();
     	if($risposte->count()<338){
 				for($i = 1; $i<=338; $i++){
 				if(!$risposte->where('item_id',$i)->first()){
@@ -85,8 +188,8 @@ class TestController extends Controller {
         return view('test.show')->with([
 			'test' => $test,
 			'test_counter' => $test->counter(),
-			'gruppi_scale' => GruppoScala::all(),
-			'scale' => Scala::orderBy('id')->get(),
+			'gruppi_scale' => session('gruppi_scale') ?: GruppoScala::all(),
+			'scale' => session('scale') ?: Scala::orderBy('id')->get(),
 		    'risposte' => $risposte,
 			'risultati' => Risultato::where('test_id', $test->id)->get(),
 			'item_critici' => $this->getItemCritici($id)
@@ -162,6 +265,7 @@ class TestController extends Controller {
 		$item_critici = array();
 		$condizioni = Condizione::whereIn('codice_scala', ['SUI','HLP','AXY','RC6', 'RC8','SUB','AGG'])->orderBy('item_id')->get();
 		$risultati = Risultato::where('test_id', $test_id)->get();
+		
 		if ($risultati->count() > 0)
 		{	
 			foreach($condizioni as $condizione)

@@ -5,7 +5,7 @@
 	<div class="row-fluid">
 	    <ul class="breadcrumb">
 	        <li><a href="{{ url('/') }}">Home</a></li>
-	        <li><a href="{{ session('filter')=='Tutti i test' ? url('/test/all') : url('/test') }}">Test eseguiti</a></li>
+	        <li><a href="{{ session('owner')=='all' ? url('/test/all') : url('/test') }}">Test eseguiti</a></li>
 	        <li class="active"><a id="dettaglio_test" href="{{ url('test/'.$test->id) }}">Dettaglio test</a></li>
 	    </ul>
 	</div>
@@ -32,7 +32,7 @@
 			  		 @include('risultati/index', ['test'=>$test, 'gruppi_scale'=>$gruppi_scale, 'scale'=>$scale, 'cns' => '$cns'])
 			  		</div>
 			  		<div class="tab-pane" id="item_critici">
-			  		 @include('risultati/item_critici' , ['test'=>$test, 'scale'=>$scale, 'item_critici'=>$item_critici ])
+			  		 @include('risultati/item_critici' , ['test'=>$test, 'scale'=>$scale, 'item_critici'=>$item_critici])
 			  		</div>
 			  		<div class="{{$test->risultati->count()==0?'tab-pane active':'tab-pane'}}" id="risposte">
 			  		 @include('risposte/index', ['test'=> $test, 'risposte' => $risposte])
@@ -60,11 +60,6 @@
   		$('input[type=text].ph:first').select().focus();
 	})
 
-  	// $('#toEditTest').click(function(e) { 
-  	// 	e.preventDefault();
-   //      $.blockUI({ message: $('#dati_paziente'), overlayCSS: { backgroundColor: '#aaa' }, css: { textAlign:'left', top:'10%', left:'10%', width:'300px', border:'0px', backgroundColor: 'none' } });
-   //      $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);  
-   //  }); 
 
     $('#salva').click(function() { 
         // update the block message 
@@ -280,7 +275,6 @@
           $.unblockUI();
         }
 	  });
-    }); 
-
+    });
 </script>
 @endsection

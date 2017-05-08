@@ -40,4 +40,16 @@ class Test extends Model {
         return $this->hasOne('App\Models\TestCounter');
     }
  
+    public function scopeid_user($query, $id_user)
+    {
+        if($id_user!=null)
+            return $query->where('id_user', '=', $id_user);
+        else
+            return $query;
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('cognome', 'like', $search.'%')->orWhere('nome', 'like', $search.'%');
+    }
 }
