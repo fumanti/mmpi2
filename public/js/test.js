@@ -8,7 +8,7 @@
 	  	}
 	}
 
-// $(function(){
+$(function(){
 	
 	$('[data-toggle="tooltip"]').tooltip();
 
@@ -51,4 +51,4 @@
 
         test.getList(null, e.target.id);
     });
-// });
+});

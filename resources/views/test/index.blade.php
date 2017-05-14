@@ -28,16 +28,13 @@
 				  </ul>
 				</div> 
 				@endif
-				@if(count($tests))
 		    	<div class="btn-group btn-input pull-right" style="margin-right:15px; width:25%">
 		    		<div class="input-group">
-				      <span class="input-group-addon" id="search">
-				        <!-- <button class="btn btn-default" id="search" type="button"> --><i class="fa fa-search"></i><!-- </button> -->
+				      <span class="input-group-addon" id="search"><i class="fa fa-search"></i>
 				      </span>
 		      		  <input type="text" id="txtSearch"class="form-control" placeholder="Ricerca">
 			      	</div>
 		    	</div>
-		    	@endif
 			</div>
 		  </div>
 		  <div id="lista_test">
