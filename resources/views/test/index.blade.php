@@ -5,7 +5,7 @@
 	<div class="row-fluid">
 	    <ul class="breadcrumb">
 	        <li><a href="{{ url('/') }}">Home</a></li>
-	        <li id="test_eseguiti" class="active"><a href="{{ url('/test') }}">Test eseguiti</a></li>
+	        <li id="test_eseguiti" class="active"><a href="{{ session('owner') == 'Tutti i test' ? url('/test/all') : url('/test') }}">Test eseguiti</a></li>
 	    </ul>
 	</div>	
 	<div class="row-fluid">
@@ -23,8 +23,7 @@
 				  </button>
 				  <ul id="menu_test" class="dropdown-menu" role="menu">
 				    <li><a id="user">I miei test</a></li>
-				    <li class="selected"><a id="all">Tutti i test</a></li>
-				    
+				    <li><a id="all">Tutti i test</a></li>
 				  </ul>
 				</div> 
 				@endif

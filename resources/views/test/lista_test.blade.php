@@ -82,5 +82,5 @@
 	@endif
 @endif
 <div class="panel-footer">
-	<center>{!! $tests->render() !!}</center> 
+	<center>{!! $tests->render() !!}</center>
 </div>

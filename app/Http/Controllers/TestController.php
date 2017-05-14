@@ -24,9 +24,7 @@ class TestController extends Controller {
 
 	public function index()
 	{
-		session(['gruppi_scale'=>GruppoScala::all()]);
-		session(['scale'=>Scala::orderBy('id')->get()]);
-
+		
 		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->where('id_user', '=', Auth::user()->id)->paginate(15);
 		$data = ['owner' => session('owner') ?:'user', 'search' => '', 'sort' => 'id', 'dir' => 'asc', 'page' => 1 ];
 		// 	'owner' => session('owner')?:'user', 
@@ -37,7 +35,7 @@ class TestController extends Controller {
 		// ];
 
 		$tests =  $this->getTests($data);
-		//$owner = $data['owner'];
+		$owner = $data['owner'];
 		//session(['owner'=>$owner]);
 		return view ('test.index', compact('tests')); //, 'owner'));
 	}
@@ -166,7 +164,7 @@ class TestController extends Controller {
     		return redirect('test');
     	}
 
-		/*		
+				
 		$gruppi_scale = Cache::remember('gruppi_scale', 30*60, function() {
 	        return GruppoScala::all();
 	    });
@@ -174,7 +172,7 @@ class TestController extends Controller {
 		$scale = Cache::remember('scale', 30*60, function() {
 	        return Scala::orderBy('id')->get();
 	    });
-		*/
+		
 
     	$risposte = Risposta::where('test_id', '=', $test->id)->orderBy('item_id')->get();
     	if($risposte->count()<338){
@@ -188,8 +186,8 @@ class TestController extends Controller {
         return view('test.show')->with([
 			'test' => $test,
 			'test_counter' => $test->counter(),
-			'gruppi_scale' => session('gruppi_scale') ?: GruppoScala::all(),
-			'scale' => session('scale') ?: Scala::orderBy('id')->get(),
+			'gruppi_scale' => $gruppi_scale ?: GruppoScala::all(),
+			'scale' => $scale ?: Scala::orderBy('id')->get(),
 		    'risposte' => $risposte,
 			'risultati' => Risultato::where('test_id', $test->id)->get(),
 			'item_critici' => $this->getItemCritici($id)
