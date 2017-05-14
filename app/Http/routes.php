@@ -30,7 +30,7 @@ Route::controllers([
 ]);
 
 
-Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@index']);
+Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@index']); 
 // Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
 Route::post('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
 // Route::post('test/user', ['middleware'=>'auth', 'uses'=>'TestController@getList']);

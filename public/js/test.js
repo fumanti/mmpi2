@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(function(){
 	function setOwner(owner)
 	{
 		$('#owner span[data-bind="label"]').text(owner=='all'?'Tutti i test':'I miei test');
