@@ -39,9 +39,6 @@
 		  </div>
 		  <div id="lista_test">
 	 		
-
-
-
 					<div class="table-responsive">
 						<table id="testtable" class="table table-striped paginated">
 							<thead>
@@ -83,10 +80,6 @@
 				<div class="panel-footer">
 					<center>{!! $tests->render() !!}</center>
 				</div>
-
-
-
-
 
 		  </div>
 		  {!! Form::close() !!}
