@@ -49,9 +49,4 @@
 @section('footer')
 <script src="../../js/ajaxUtils.js"></script>
 <script src="../../js/test.js"></script>
-<script>
-$(document).ready(function(){
-	setOwner("{{ session('owner') }}");
-});
-</script>
 @endsection
