@@ -36,6 +36,9 @@ class TestController extends Controller {
 
 	public function index()
 	{
+		if(Request::ajax()) {
+          	return "";
+		}
 		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->where('id_user', '=', Auth::user()->id)->paginate(15);
 		$data = ['owner' => session('owner') ?:'user', 'search' => '', 'sort' => 'id', 'dir' => 'asc', 'page' => 1 ];
 		// 	'owner' => session('owner')?:'user', 
