@@ -1,4 +1,4 @@
-$(function(){
+$(document).ready(function(){
 	function setOwner(owner)
 	{
 		$('#owner span[data-bind="label"]').text(owner=='all'?'Tutti i test':'I miei test');
@@ -9,11 +9,7 @@ $(function(){
 	  	}
 	}
 
-	$(document).ready(function(){
-		setOwner("{{ session('owner') }}");
-	});
-
-	$('[data-toggle="tooltip"]').tooltip();
+	setOwner("{{ session('owner') }}");
 
     $(document.body).on('click', '#menu_test li', function(event) {  
 	  setOwner(event.target.id);
