@@ -18,7 +18,7 @@ function getList(url, sort){
   }
   
   $.ajax({
-    url: url === undefined ? '/test/?page=1' : url.replace('/?','?'),
+    url: (url === undefined || url == null) ? '/test/?page=1' : url.replace('/?','?'),
     type: "post",
       data: {
         'owner': ($('#owner span[data-bind="label"]').text()=='Tutti i test')?'all':'user',
