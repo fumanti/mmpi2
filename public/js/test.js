@@ -9,7 +9,6 @@ function setOwner(owner)
 }
 
 function getList(url, sort){
-  console.log($('#owner span[data-bind="label"]').text());
   if(sort === undefined){
     sort_id = $('#testtable thead a span[class!="fa fa-sort"]').closest('a').attr('id');
     dir = $('#testtable thead a span[class!="fa fa-sort"]').attr("class").replace('fa fa-sort-', '');
@@ -19,7 +18,7 @@ function getList(url, sort){
   }
   
   $.ajax({
-    url: url === undefined ? '/test/?page=1' : url,
+    url: url === undefined ? 'test/?page=1' : url,
     type: "post",
       data: {
         'owner': ($('#owner span[data-bind="label"]').text()=='Tutti i test')?'all':'user',
