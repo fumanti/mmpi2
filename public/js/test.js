@@ -1,18 +1,8 @@
+
 $(function(){
-	function setOwner(owner)
-	{
-		$('#owner span[data-bind="label"]').text(owner=='all'?'Tutti i test':'I miei test');
-	  	if(owner == 'all'){
-		  	$('li:Has(#all)').attr('class','disabled');$('li:Has(#user)').removeAttr('class');
-	  	} else {
-	  		$('li:Has(#user)').attr('class','disabled');$('li:Has(#all)').removeAttr('class');
-	  	}
-	}
-
-	setOwner("{{ session('owner') }}");
-
+	
     $(document.body).on('click', '#menu_test li', function(event) {  
-	  setOwner(event.target.id);
+	  test.setOwner(event.target.id);
 	  test.getList();
     });
     
