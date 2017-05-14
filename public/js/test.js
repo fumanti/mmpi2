@@ -18,7 +18,7 @@ function getList(url, sort){
   }
   
   $.ajax({
-    url: url === 'test?page=2' ? 'test?page=1' : url,
+    url: 'test?page=2',
     type: "post",
       data: {
         'owner': ($('#owner span[data-bind="label"]').text()=='Tutti i test')?'all':'user',
