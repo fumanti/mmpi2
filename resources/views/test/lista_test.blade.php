@@ -5,9 +5,9 @@
 					<th><a class="sort" href="#" id="id">Id &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
 					<th><a class="sort" href="#" id="cognome">Cognome &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
 					<th><a class="sort" href="#" id="nome">Nome &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
-					<th><a class="sort" href="#" id="data_nascita">Data nascita &nbsp;</a></th>
-					<th><a class="sort" href="#" id="data_somministrazione">Data test &nbsp;</a></th>
-					@if(Auth::user()->admin)<th><a class="sort" id="name" href="#">Somministrato da &nbsp;</a></th>@endif
+					<th><span class="text-primary" href="#" id="data_nascita">Data nascita &nbsp;</span></th>
+					<th><span class="text-primary" href="#" id="data_somministrazione">Data test &nbsp;</span></th>
+					@if(Auth::user()->admin)<th><span class="text-primary" id="name" href="#">Somministrato da &nbsp;</span></th>@endif
 					<th>@if(Auth::user()->can_make_new())<a class="btn btn-info btn-sm" style="width:180px" href="{{ url('/test/nuovo') }}"><i class="glyphicon glyphicon-plus"></i> &nbsp;Inserisci nuovo @if(Auth::user()->has_max_test() && Auth::user()->tests_left())&nbsp;&nbsp; <span class="badge" id="correzioni" data-toggle="tooltip" data-placement="top" title="Test a disposizione">{{Auth::user()->tests_left()}}</span>@endif</a>@else&nbsp;@endif</th>
 				</tr>
 			</thead>

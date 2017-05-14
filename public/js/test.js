@@ -35,7 +35,7 @@ function getList(url, sort){
         document.location.href='/';
       },
       error: function(){
-        document.location.href='/';
+        //document.location.href='/';
       }
   });
 };
@@ -47,12 +47,8 @@ function changeIcons(id, dir) {
 }
 
 $(function(){
-
-	// setOwner("{{ session('owner') }}");
-
     $(document.body).on('click', '#menu_test li', function(event) {  
 	  setOwner(event.target.id);
-	  // getList();
     });
     
     $(document).ready(function(event) {
@@ -61,11 +57,11 @@ $(function(){
 	  }
     });
 
-	$(document.body).on( 'click', '#search', function( event ) {
+	$(document.body).on('click', '#search', function( event ) {
 		$('#txtSearch').focus();
     });
 
-	$(document.body).on( 'keyup', '#txtSearch', function( event ) {
+	$(document.body).on('keyup', '#txtSearch', function( event ) {
 	 	if(event.which==13){
  			event.preventDefault();
 		} else {

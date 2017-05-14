@@ -52,4 +52,9 @@ class Test extends Model {
     {
         return $query->where('cognome', 'like', $search.'%')->orWhere('nome', 'like', $search.'%');
     }
+
+    public function scopeJoinWithUser($query)
+    {
+        return $query->leftJoin("users", "users.id", "=", "tests.id_user");
+    }
 }

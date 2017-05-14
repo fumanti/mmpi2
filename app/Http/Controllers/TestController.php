@@ -39,14 +39,8 @@ class TestController extends Controller {
 		if(Request::ajax()) {
           	return "";
 		}
-		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->where('id_user', '=', Auth::user()->id)->paginate(15);
+
 		$data = ['owner' => session('owner') ?:'user', 'search' => '', 'sort' => 'id', 'dir' => 'asc', 'page' => 1 ];
-		// 	'owner' => session('owner')?:'user', 
-		// 	'search' => session('search')?:'',
-		// 	'sort' => session('sort')?:'id', 
-		// 	'dir' => session('dir')?:'asc',
-		// 	'page' => session('page')?:1
-		// ];
 
 		$tests =  $this->getTests($data);
 		$owner = $data['owner'];
@@ -54,60 +48,12 @@ class TestController extends Controller {
 		return view ('test.index', compact('tests', 'owner'));
 	}
 
-/*	public function user(){
-
-		$owner = 'mine';
-		session(['owner'=>$owner]);
-		$tests = Test::with('user')->where('id_user', '=', Auth::user()->id)->paginate(15);
-		return view ('test.index', compact('tests', 'owner'));
-	}
-*/
 	public function getList()
 	{
 		if(Request::ajax()) {
           	$data = Input::all();		        
 		}
-
-		// $owner = 'user';
-		// $search = '';
-		// $sort = 'id';
-		// $dir = 'asc';
-		// $page = 1;
-
-		// $where = '';
-
-			// if (array_key_exists('owner', $data)) {
-		 //  		$owner = $data['owner'];
-	  //       }
-
-	  //       if((array_key_exists('sort', $data) && !is_null($data['sort'])) 
-			// &&(array_key_exists('dir', $data) && !is_null($data['dir']))) 
-	  //       {
-	  //       	$sort = $data['sort'];
-	  //       	$dir = $data['dir'];
-			// }
-
-			// if(array_key_exists('search', $data) && !is_null($data['search']) && strlen($data['search'])>0) {
-			// 	$search = $data['search'];
-			// }
-			
-			// $where = ($owner == 'user') ? 'id_user = '.Auth::user()->id : '';
-			// $where = $where.(strlen($where)>0 ? ' and ' : '').'(cognome like \''.$search.'%\' or nome like \''.$search.'%\')';
-
-			// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->whereRaw(strlen($where)>0?$where:'1 = 1')->orderBy($sort, $dir)->paginate(15);
-			
-			// if (array_key_exists('page', $data)){
-			// 	$page = $data['page'];
-			// }
-
-			// session(['owner'=>$owner]);
-			// session(['search'=>$search]);
-			// session(['sort'=>$sort]);
-			// session(['dir'=>$dir]);
-			// session(['page'=>$page]);
-			// session(['where'=>$where]);
 		$tests =  $this->getTests($data); //($owner, $search, $sort, $dir, $page, $where);
-
 		return view ('test.lista_test', compact('tests')); // , 'owner')); //, 'search', 'sort', 'dir'));
 	}
 
@@ -140,7 +86,9 @@ class TestController extends Controller {
 		$where = ($owner == 'user') ? 'id_user = '.Auth::user()->id : '';
 		$where = $where.(strlen($where)>0 ? ' and ' : '').'(cognome like \''.$search.'%\' or nome like \''.$search.'%\')';
 
-		$tests = Test::with(['user' => function($u){$u->withTrashed();}])->whereRaw(strlen($where)>0?$where:'1 = 1')->orderBy($sort, $dir)->paginate(15);
+		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->whereRaw(strlen($where)>0?$where:'1 = 1')->orderBy($sort, $dir)->paginate(15);
+		
+		$tests = Test::joinWithUser()->whereRaw(strlen($where)>0?$where:'1 = 1')->select(['users.name as name', 'tests.*'])->orderBy($sort, $dir)->paginate(15);
 		
 		if (array_key_exists('page', $data)){
 			$page = $data['page'];
@@ -222,7 +170,6 @@ class TestController extends Controller {
 	public function store()
 	{	
 		$input = Request::all();
-		
 		if(Auth::user()->can_make_new() )
 		{
 			$test = Test::create($input);
@@ -242,6 +189,7 @@ class TestController extends Controller {
 	{
 		//if(Request::ajax()) {
           	$data = Request::all(); // Input::all();
+          	
           	$test = Test::findOrFail($id);
           	$test->cognome = $data['cognome'];
           	$test->nome = $data['nome'];
