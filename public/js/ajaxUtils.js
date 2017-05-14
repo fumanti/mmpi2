@@ -1,4 +1,4 @@
-var test = {};
+/*var test = {};
 
 test.getList = function(url, sort){
   console.log($('#owner span[data-bind="label"]').text());
@@ -39,3 +39,4 @@ test.changeIcons = function(id, dir) {
   span.addClass("fa fa-sort-"+dir);
 }
 
+*/
