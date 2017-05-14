@@ -19,11 +19,11 @@
 		    	@if(Auth::user()->admin)
 				<div class="btn-group btn-input pull-right" id="owner">
 				  <button type="button" class="btn btn-primary dropdown-toggle form-control" data-toggle="dropdown">
-				    <span data-bind="label">I miei test</span> <span class="caret"></span>
+				    <span data-bind="label">{{ $owner == 'all' ? 'Tutti i test' : 'I miei test' }}</span> <span class="caret"></span>
 				  </button>
 				  <ul id="menu_test" class="dropdown-menu" role="menu">
-				    <li><a id="user">I miei test</a></li>
-				    <li><a id="all">Tutti i test</a></li>
+				    <li {{($owner == 'user')?'class=disabled':''}}><a id="user" href="{{ url('/test/user') }}">I miei test</a></li>
+				    <li {{($owner == 'all')?'class=disabled':''}}><a id="all"  href="{{ url('/test/all') }}">Tutti i test</a></li>
 				  </ul>
 				</div> 
 				@endif
@@ -34,10 +34,59 @@
 		      		  <input type="text" id="txtSearch"class="form-control" placeholder="Ricerca">
 			      	</div>
 		    	</div>
+
 			</div>
 		  </div>
 		  <div id="lista_test">
-	 		@include('test/lista_test', ['tests'=>$tests])
+	 		
+
+
+
+					<div class="table-responsive">
+						<table id="testtable" class="table table-striped paginated">
+							<thead>
+								<tr>
+									<th><a class="sort" href="#" id="id">Id &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
+									<th><a class="sort" href="#" id="cognome">Cognome &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
+									<th><a class="sort" href="#" id="nome">Nome &nbsp;<span class="fa fa-sort" aria-hidden="true"></span></a></th>
+									<th><a class="sort" href="#" id="data_nascita">Data nascita &nbsp;</a></th>
+									<th><a class="sort" href="#" id="data_somministrazione">Data test &nbsp;</a></th>
+									@if(Auth::user()->admin)<th><a class="sort" id="name" href="#">Somministrato da &nbsp;</a></th>@endif
+									<th>@if(Auth::user()->can_make_new())<a class="btn btn-info btn-sm" style="width:180px" href="{{ url('/test/nuovo') }}"><i class="glyphicon glyphicon-plus"></i> &nbsp;Inserisci nuovo @if(Auth::user()->has_max_test() && Auth::user()->tests_left())&nbsp;&nbsp; <span class="badge" id="correzioni" data-toggle="tooltip" data-placement="top" title="Test a disposizione">{{Auth::user()->tests_left()}}</span>@endif</a>@else&nbsp;@endif</th>
+								</tr>
+							</thead>
+							<tbody>
+							@if(count($tests)>0)
+								@foreach($tests as $test)
+									<tr>
+										<td class="col-md-1">{{$test->id}}</td>
+										<td class="col-md-1 text-uppercase">{{$test->cognome}}</td>
+										<td class="col-md-1">{{$test->nome}}</td>
+										<td class="col-md-1">{{ $test->data_nascita}}</td>
+										<td class="col-md-1">{{ $test->data_somministrazione}}</td>
+										@if(Auth::user()->admin)<td class="col-md-1">@if($test->user){{ $test->user->name }}@else&nbsp;@endif</td>@endif
+										<td class="col-md-2">
+											<a class="btn btn-action btn-default btn-sm" href="{{ url('test/'.$test->id) }}"><i class="glyphicon glyphicon-search"></i> &nbsp; Dettaglio </a>
+											<a class="btn btn-action btn-danger btn-sm" href="{{ url('test/elimina/'.$test->id) }}" onclick="return confirm('ATTENZIONE:\n\n vuoi eliminare il test di {{$test->cognome.' '.$test->nome }} ?')"><i class="glyphicon glyphicon-trash"></i> &nbsp; Elimina </a>
+										</td>
+									</tr>
+								@endforeach
+							@endif
+							</tbody>
+						</table>
+					</div>
+				@if(count($tests)==0)
+					@if(Auth::user()->can_make_new())
+						<div><br><center>Nessun test trovato.</center><br></div>
+					@endif
+				@endif
+				<div class="panel-footer">
+					<center>{!! $tests->render() !!}</center>
+				</div>
+
+
+
+
 		  </div>
 		  {!! Form::close() !!}
 		</div>
@@ -46,11 +95,5 @@
 @endsection
 
 @section('footer')
-<script src="../../js/ajaxUtils.js"></script>
 <script src="../../js/test.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		test.setOwner("{{ session('owner') }}");
-	});
-</script>
 @endsection

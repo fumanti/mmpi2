@@ -22,9 +22,20 @@ use Cache;
 
 class TestController extends Controller {
 
+	public function user()
+	{
+		session(['owner'=>'user']);
+		return redirect('test'); // $this->index();
+	}
+
+	public function all()
+	{
+		session(['owner'=>'all']);
+		return redirect('test'); //$this->index();
+	}
+
 	public function index()
 	{
-		
 		// $tests = Test::with(['user' => function($u){$u->withTrashed();}])->where('id_user', '=', Auth::user()->id)->paginate(15);
 		$data = ['owner' => session('owner') ?:'user', 'search' => '', 'sort' => 'id', 'dir' => 'asc', 'page' => 1 ];
 		// 	'owner' => session('owner')?:'user', 
@@ -37,7 +48,7 @@ class TestController extends Controller {
 		$tests =  $this->getTests($data);
 		$owner = $data['owner'];
 		//session(['owner'=>$owner]);
-		return view ('test.index', compact('tests')); //, 'owner'));
+		return view ('test.index', compact('tests', 'owner'));
 	}
 
 /*	public function user(){

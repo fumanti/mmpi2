@@ -1,15 +1,5 @@
 var test = {};
 
-test.setOwner = function(owner)
-{
-  $('#owner span[data-bind="label"]').text(owner=='all'?'Tutti i test':'I miei test');
-    if(owner == 'all'){
-      $('li:Has(#all)').attr('class','disabled');$('li:Has(#user)').removeAttr('class');
-    } else {
-      $('li:Has(#user)').attr('class','disabled');$('li:Has(#all)').removeAttr('class');
-    }
-}
-
 test.getList = function(url, sort){
   console.log($('#owner span[data-bind="label"]').text());
   if(sort === undefined){
