@@ -35,7 +35,7 @@ function getList(url, sort){
         document.location.href='/';
       },
       error: function(){
-        //document.location.href='/';
+        document.location.href='/';
       }
   });
 };
