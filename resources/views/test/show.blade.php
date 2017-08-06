@@ -20,6 +20,8 @@
 				<br>
 				<ul id="testTabs" class="nav nav-tabs nTabs">
 					 <li role="presentation" class="{{$test->risultati->count()>0?'active':'hidden'}}"><a href="#risultati">Risultati</a></li>
+					 <li role="presentation" class="{{$test->risultati->count()>0?'':'hidden'}}"><a href="#validita">Validità</a></li>
+					 <li role="presentation" class="{{$test->risultati->count()>0?'':'hidden'}}"><a href="#profilo">Profilo</a></li>
 			  		 <li role="presentation" class="{{$test->risultati->count()>0?'':'hidden'}}"><a href="#item_critici">Item critici</a></li>
 				  	 <li role="presentation" class="{{$test->risultati->count()==0?'active':''}}"><a href="#risposte">Risposte</a></li>
 				   	 @if(!$test->counter || $test->counter->can_correct())<a id="calcolaRisultati" href="#" class="btn btn-primary btn-xs pull-left" style="padding:9px;margin-top:2px;margin-left:2px;"><i class="glyphicon glyphicon-{{$test->risultati->count()==0?'flash':'refresh'}}"></i> &nbsp; Calcola Risultati &nbsp;&nbsp; <span class="badge" id="correzioni" data-toggle="tooltip" data-placement="top" title="Correzioni a disposizione">{{$test->counter ? 3 - $test->counter->calcoli : ''}}</span></a>@endif
@@ -29,10 +31,16 @@
 				</ul>
 				<div class="tab-content">
 			  		<div class="{{$test->risultati->count()>0?'tab-pane active':'tab-pane'}}" id="risultati">
-			  		 @include('risultati/index', ['test'=>$test, 'gruppi_scale'=>$gruppi_scale, 'scale'=>$scale, 'cns' => '$cns'])
+			  		 @include('risultati/index', ['test'=>$test, 'gruppi_scale'=>$gruppi_scale, 'scale'=>$scale])
+			  		</div>
+			  		<div class="tab-pane" id="validita">
+			  		 @include('risultati/validita', ['test'=>$test, 'struttura'=>$validita, 'scale'=>$scale])
+			  		</div>
+			  		<div class="tab-pane" id="profilo">
+			  		 @include('risultati/profilo', ['test'=>$test, 'struttura'=>$profilo, 'scale'=>$scale])	
 			  		</div>
 			  		<div class="tab-pane" id="item_critici">
-			  		 @include('risultati/item_critici' , ['test'=>$test, 'scale'=>$scale, 'item_critici'=>$item_critici])
+			  		 @include('risultati/item_critici' , ['item_critici'=>$item_critici])
 			  		</div>
 			  		<div class="{{$test->risultati->count()==0?'tab-pane active':'tab-pane'}}" id="risposte">
 			  		 @include('risposte/index', ['test'=> $test, 'risposte' => $risposte])

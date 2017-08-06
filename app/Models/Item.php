@@ -9,5 +9,10 @@ class Item extends Model {
 	public $fillable = ['id', 'testo'];
 	
 	public $timestamps = false;
- 
+
+	public function condizioni()
+	{
+		return $this->hasOne('App\Models\Condizione');
+	}
+
 }

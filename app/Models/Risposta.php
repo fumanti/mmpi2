@@ -27,4 +27,9 @@ class Risposta extends Model {
     	return $this->belongsTo('App\Models\Item');
     }
 
+	public function scopeVere($query){
+		return $query->where('valore', 1);
+	} 
+
+
 }

@@ -22,11 +22,11 @@ class Condizione extends Model {
 
 	public function scala()
     {
-        return $this->belongsTo('App\Models\Scala');
+        return $this->belongsTo('App\Models\Scala', 'codice_scala', 'codice');
     }
 
     public function item()
     {
-    	return $this->hasOne('App\Models\Item');
+    	return $this->belongsTo('App\Models\Item');
     }
 }

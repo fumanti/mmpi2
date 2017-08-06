@@ -52,7 +52,7 @@
 			          <td class="text-left col-md-1">T</td>
 			          @foreach($gruppo_scala->scale as $scala)
 			          <td class="text-right">
-			          	@if($test->risultati->where('codice_scala',$scala->codice)->count()) 
+			          	@if($scala->codice != 'CNS' && $test->risultati->where('codice_scala',$scala->codice)->count()) 
 			          	  {{ $test->risultati->where('codice_scala',$scala->codice)->first()->punteggio_t }}
 			          	@endif&nbsp;
 			          </td>

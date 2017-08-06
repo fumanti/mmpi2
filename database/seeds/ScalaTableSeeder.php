@@ -9,6 +9,7 @@ class ScalaTableSeeder extends Seeder {
 		//Scala::truncate();
 		
 		// GruppoScala 1
+		Scala::create(['codice'=>'CNS', 	'ordine'=>0,	'gruppo_scala_id'=>1, 	'descrizione'=>'Non so' 	      									, 'media'=>NULL, 'deviazione_standard'=>NULL ]);
 		Scala::create(['codice'=>'VRIN-r', 	'ordine'=>1,	'gruppo_scala_id'=>1, 	'descrizione'=>'Incoerenza nelle Risposte' 	      					, 'media'=>03.34, 'deviazione_standard'=>02.07 ]);
 		Scala::create(['codice'=>'TRIN-r', 	'ordine'=>2,	'gruppo_scala_id'=>1, 	'descrizione'=>'Incoerenza nelle Risposte "Vero"'					, 'media'=>11.01, 'deviazione_standard'=>01.33, 'punteggio_base'=>11]);
 		Scala::create(['codice'=>'F-r',    	'ordine'=>3,	'gruppo_scala_id'=>1, 	'descrizione'=>'Frequenza'											, 'media'=>01.68, 'deviazione_standard'=>02.20 ]);

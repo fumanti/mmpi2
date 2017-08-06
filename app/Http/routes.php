@@ -30,6 +30,11 @@ Route::controllers([
 ]);
 
 
+Route::get('/profilo/{id}', 'TestController@getProfilo');
+
+// Route::get('/validita/{id}', 'TestController@getValidita');
+
+
 Route::post('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
 Route::get('test', ['middleware'=>'auth', 'uses'=>'TestController@index']);
 Route::get('test/user', ['middleware'=>'auth', 'uses'=>'TestController@user']);
@@ -43,6 +48,7 @@ Route::get('test/elimina/{id}', ['middleware'=>'auth', 'uses'=>'TestController@e
 //Route::get('test/{id_user?}', ['middleware'=>'admin', 'uses'=>'TestController@index']);
 Route::get('test/{id}', ['middleware'=>'auth', 'uses'=>'TestController@show']);
 Route::get('test/{id}/export', ['middleware'=>'auth', 'uses'=>'TestController@export']);
+Route::get('test/{id}/export2', ['middleware'=>'auth', 'uses'=>'TestController@export2']);
 Route::post('test/nuovo', ['middleware'=>'auth', 'uses'=>'TestController@store']);
 Route::get('test/{id}/edit', ['middleware'=>'auth', 'uses'=>'TestController@edit']);
 Route::post('test/{id}/edit', ['middleware'=>'auth', 'uses'=>'TestController@update']);

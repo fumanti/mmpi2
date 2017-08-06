@@ -14,7 +14,7 @@
 		  </ul>
 		</div>
     	<div class="pull-right">
-    		<a id="esporta_excel" href="{{ url('test/'.$test->id.'/export') }}" class="btn" role="button"><i class="fa fa-file-excel-o"></i> &nbsp; Esporta in Excel </a>
+    		<a id="esporta_excel" href="{{ url('test/'.$test->id.'/export2') }}" class="btn" role="button"><i class="fa fa-file-excel-o"></i> &nbsp; Esporta in Excel </a>
     	</div>
     </div>
     <br>
@@ -43,7 +43,7 @@
 			      <tbody>
 			        <tr>
 			          <td class="text-left">Grezzo</td>
-			          <td class="text-right">{{$cns}}</td>
+			          <td class="text-right">{{$test->risultati->where('codice_scala','CNS')->first()->punteggio_grezzo}}</td>
 			          <td class="text-right">{{$test->risultati->where('codice_scala','VRIN-r')->first()->punteggio_grezzo}}</td>
 			          <td class="text-right">{{$test->risultati->where('codice_scala','TRIN-r')->first()->punteggio_grezzo}}</td>
 			          <td class="text-right"></td>

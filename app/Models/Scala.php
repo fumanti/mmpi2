@@ -39,5 +39,14 @@ class Scala extends Model {
     {
         return $this->hasOne('App\Models\Risultato');
     }
-        
+    
+    public function scopeDescrizione($query)
+    {
+        return $query->first();
+    }
+
+    public function scopeCritiche($query)
+    {
+        return $query->whereIn('codice_scala', ['SUI','HLP','AXY','RC6','RC8','SUB','AGG']); 
+    } 
 }

@@ -27,6 +27,24 @@ class Risultato extends Model {
 
     public function scala()
     {
-    	return $this->hasOne('App\Models\Scala');
+    	return $this->belongsTo('App\Models\Scala', 'codice_scala', 'codice');
     }
+
+
+    public function scopeCritici($query)
+    {
+        $query = $query->where(function ($query) { 
+            $query->whereIn('codice_scala', ['SUI','HLP','AXY','RC6','RC8','SUB','AGG'])->where('codice_scala',$codice)->first()->punteggio_t >= 65; 
+        });
+        return $query;    
+    }
+
+
+    // public function scopeNotCNS($query)
+    // {
+    //     $query = $query->where(function ($query) { 
+    //         $query->where('codice_scala', '!=', 'CNS'); 
+    //     });
+    //     return $query;    
+    // }
 }

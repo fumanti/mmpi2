@@ -141,7 +141,7 @@ class RisultatiController extends Controller {
   			$risultato = Risultato::firstOrNew(['test_id'=> $test_id, 'codice_scala'=> $codice_scala]);
   			      			
   			$risultato->punteggio_grezzo = $this->getPunteggio($test_id, $scala);
-      		$risultato->punteggio_t = $this->getPuntiT($scala->codice, $risultato->punteggio_grezzo);
+      		$risultato->punteggio_t = $scala != 'CNS' ? $this->getPuntiT($scala->codice, $risultato->punteggio_grezzo) : NULL;
       		$risultato->percentuale_risposte = $this->getPercRisposte($scala->codice, $test_id);
 
       		$risultato->save();
@@ -184,7 +184,9 @@ class RisultatiController extends Controller {
 		foreach($condizioni as $condizione) 
 		{
 			$risposta = Risposta::where(['test_id'=>$test_id, 'item_id'=>$condizione->item_id])->first();
-			
+			// Imposta a 2 il valore in caso di valore null
+			$valoreRisposta = is_null($risposta->valore) ? 2 : $risposta->valore;
+
 			if($risposta->valore == $condizione->valore_richiesto) 
 			{
 				if($condizione->set==0)
@@ -215,7 +217,7 @@ class RisultatiController extends Controller {
 	public function getItemCritici($test_id, $risultati)
 	{
 		$item_critici = array();
-		$condizioni = Condizione::whereIn('codice_scala', ['SUI','HLP','AXY','RC6', 'RC8','SUB','AGG'])->orderBy('item_id')->get();
+		$condizioni = Condizione::whereIn('codice_scala', ['SUI','HLP','AXY','RC6','RC8','SUB','AGG'])->orderBy('item_id')->get();
 		
 		foreach($condizioni as $condizione) 
 		{
