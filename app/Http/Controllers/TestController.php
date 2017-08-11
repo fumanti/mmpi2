@@ -645,7 +645,7 @@ class TestController extends Controller {
 
 
 		// Scrive intestazione e piedipagina
-		$this->writeHeader();
+		$this->writeHeader($test);
 		$this->writeFooter();
 
 		// Scrive la matrice delle Risposte
@@ -694,7 +694,7 @@ class TestController extends Controller {
     	$sheet->setCellValue('A68', 'Correzione manuale effettuata da '. $test->user->name .' e profilo grafico tramite Excel realizzato da ITCI © e concesso in uso ai membri');
 	}
 
-	public function writeHeader($left, $right)
+	public function writeHeader($test)
 	{
 		$sheet = $this->excel->getSheetByName('Matrice');
 
