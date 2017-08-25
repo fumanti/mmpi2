@@ -1003,7 +1003,7 @@ class TestController extends Controller {
 			// Valori
 			foreach(array_unique(array_pluck($item_critici, 'codice')) as $scala) { 		
 			  	$sheet->getStyle('B'.$row)->getFont()->setBold(TRUE);
-			  	$sheet->setCellValue('B'.$row, $scala.' - '.$item_critici[array_search($scala,array_column($item_critici,'codice'))]['descrizione']);
+			  	$sheet->setCellValue('B'.$row, $scala.' - '.$item_critici[array_search($scala,array_fetch($item_critici,'codice'))]['descrizione']);
 			  	$row++;
 	          foreach($item_critici as $item_critico) {
 		      	if($item_critico['codice'] == $scala) {
