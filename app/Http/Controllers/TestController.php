@@ -672,9 +672,9 @@ class TestController extends Controller {
 
 		$this->excel->setActiveSheetIndexByName('Cover');
 
-		$outputfilename = 'test_'.mb_strtoupper($test->cognome[0].$test->nome[0],'UTF-8').$test->id.'.xlsx';
+		$outputfilename = 'test_'.mb_strtoupper($test->cognome[0].$test->nome[0],'UTF-8').$test->id;
 		header("Content-Type: application/vnd.ms-excel");
-		header("Content-Disposition: attachment; filename=\"".$outputfilename."\"");
+		header('Content-Disposition: attachment; filename="'.$outputfilename.'.xlsx"');
 		header("Cache-Control: max-age=0");
 
 		$writer = \PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
@@ -869,7 +869,7 @@ class TestController extends Controller {
 							$sheet->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 							$this->align($sheet->getStyle('C'.$row), "topleft");
 							
-							$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
+							//$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
 							$row++;
 						}
 
@@ -890,7 +890,7 @@ class TestController extends Controller {
 							$sheet->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 							$this->align($sheet->getStyle('C'.$row), "topleft");
 							
-							$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
+							//$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
 							$row++;
 						}
 
@@ -911,7 +911,7 @@ class TestController extends Controller {
 							$sheet->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 							$this->align($sheet->getStyle('C'.$row), "topleft");
 							
-							$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
+							//$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "hair");
 							$row++;
 						}
 
@@ -1021,7 +1021,7 @@ class TestController extends Controller {
 
 	public function writeTrueFalsePerc($risposte_date)
 	{
-		$sheet = $this->excel->getSheetByName('1a');
+		$sheet = $this->excel->getSheetByName('1');
 		// Percentuale risposte Vero
     	$sheet->setCellValue('G48', round($risposte_date->where('valore',1)->count() * 100 / count($risposte_date),0));
     	// PErcentuale risposte Falso
