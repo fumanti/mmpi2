@@ -13,7 +13,7 @@
 					  <div class="row-fluid col-md-12" style="margin-bottom:2px;margin-top20px">
 			  			<h5>
 			  			  <div class="col-md-1">&nbsp;</div>
-				          <div class="col-md-10"><b>{{ $scala }} - {{ $item_critici[array_search($scala,array_column($item_critici,'codice'))]['descrizione'] }}</b></div>
+				          <div class="col-md-10"><b>{{$scala}} - {{ $item_critici[array_search($scala,array_column($item_critici,'codice'))]['descrizione'] }}</b></div>
 				          <div class="col-md-1">&nbsp;</div>
 				      	</h5>
 				      	<br>
