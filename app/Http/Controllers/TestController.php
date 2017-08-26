@@ -848,8 +848,9 @@ class TestController extends Controller {
 					{
 						// Scala
 						$scala = mb_strtoupper($key, 'UTF-8')."  −  ".mb_strtoupper($value["descrizione"], 'UTF-8')." (".mb_strtoupper($value['punteggio'], 'UTF-8').")";
-						$sheet->setCellValue('A'.$row, $scala);
-						$this->border($sheet->getStyle('A'.$row.":C".$row), "bottom", "medium");
+						$sheet->setCellValue('B'.$row, $scala);
+						$this->font($sheet->getStyle('B'.$row), ["bold"=>true]);
+						$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "medium");
 						$row++;
 
 						// Sintomi clinici, tendenze comportamentali e caratteristiche di personalità
@@ -1024,7 +1025,7 @@ class TestController extends Controller {
 		$sheet = $this->excel->getSheetByName('1');
 		// Percentuale risposte Vero
     	$sheet->setCellValue('G48', round($risposte_date->where('valore',1)->count() * 100 / count($risposte_date),0));
-    	// PErcentuale risposte Falso
+    	// Percentuale risposte Falso
     	$sheet->setCellValue('G49', round($risposte_date->where('valore',0)->count() * 100 / count($risposte_date),0));
 	}
 

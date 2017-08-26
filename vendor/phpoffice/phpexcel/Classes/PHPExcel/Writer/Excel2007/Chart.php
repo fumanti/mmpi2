@@ -1566,10 +1566,10 @@ class PHPExcel_Writer_Excel2007_Chart extends
     $layoutTarget = "inner";
     $xMode = "edge";
     $yMode = "edge";
-    $xOffset = 0.1;  //The left margin in percentage of graph width.
-    $yOffset = 0.1;  //The top margin in percentage of graph width.
-    $paWidth = 0.9;  //The percentage width of the plot area relative to the graph width;
-    $paHeight = 0.9; //The percentage height of the plot area relative to the graph height;
+    $xOffset = -0.01;  //The left margin in percentage of graph width.
+    $yOffset = 0.0;  //The top margin in percentage of graph width.
+    $paWidth = 0.99;  //The percentage width of the plot area relative to the graph width;
+    $paHeight = 1.0; //The percentage height of the plot area relative to the graph height;
 
     $objWriter->startElement('c:layout');
         $objWriter->startElement('c:manualLayout');
