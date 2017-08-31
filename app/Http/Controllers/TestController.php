@@ -485,9 +485,12 @@ class TestController extends Controller {
 		return $output;
 	}
 
+	var $excel;
 	
 	public function export($id) {
-		$test = Test::with('user')->findOrFail($id);
+		$this->excel($id,1);
+
+/*		$test = Test::with('user')->findOrFail($id);
         $gruppi_scale = GruppoScala::all();
         $scale = Scala::all(); //->orderBy('ordine');
         $risultati = Risultato::where('test_id', $id)->get();
@@ -495,22 +498,18 @@ class TestController extends Controller {
 		$risposte = Risposta::where('test_id', $id)->orderby('item_id')->get();
 
         // Legge il template
-		$fileName = public_path().'/template.xlsx';
+		$fileName = public_path().'/template1.xlsx';
         $Reader = \PHPExcel_IOFactory::createReader('Excel2007');
         $Reader->setIncludeCharts(TRUE);
-		$excel = $Reader->load($fileName);
-
-    	// 1 Prima pagina
-    	$sheet = $excel->getSheet(0);
+		//$excel = $Reader->load($fileName);
+		$this->excel = new \PHPExcel();
+		$this->excel = $Reader->load($fileName);
     	
-    	$sheet->setCellValue('G17','Correzione manuale effettuata da '.$test->user->name);
-		$sheet->setCellValue('G43', $test->cognome.', '.$test->nome);
-    	$sheet->setCellValue('G45', $test->data_somministrazione);
-    	$sheet->setCellValue('G47', $test->user->name);
-    	$sheet->setCellValue('A68', 'Correzione manuale effettuata da '. $test->user->name .' e profilo grafico tramite Excel realizzato da ITCI © e concesso in uso ai membri');
+    	// 1 Prima pagina
+    	$sheet = $this->excel->getSheetByName('Cover');
 
 		// 2 Profilo delle Scale di validità
-		$sheet = $excel->getSheet(1);
+		$sheet = $this->excel->getSheet(1);
 	   	$this->set_header($sheet, $test);
     	// Valori
     	$this->set_values($sheet, 'B', $test, $scale->where('gruppo_scala_id', 1), $risultati);
@@ -528,7 +527,7 @@ class TestController extends Controller {
 		$sheet->setCellValue('A64', 'Pagina 2 di '.(count($item_critici)>0?'8':'7'));
 	    
 		// 3 Profilo delle Scale Sovraordinate e Cliniche Ristrutturate
-		$sheet = $excel->getSheet(2);
+		$sheet = $this->excel->getSheet(2);
 	   	$this->set_header($sheet, $test);
     	// Valori
     	$this->set_values($sheet, 'B', $test, $scale->where('gruppo_scala_id', 2), $risultati);
@@ -537,7 +536,7 @@ class TestController extends Controller {
 		$sheet->setCellValue('A67', 'Pagina 3 di '.(count($item_critici)>0?'8':'7'));
 
 		// 4 Profilo delle Scale Somatico/Cognitive e Internalizzazione
-		$sheet = $excel->getSheet(3);
+		$sheet = $this->excel->getSheet(3);
 	   	$this->set_header($sheet, $test);
     	// Valori
     	$this->set_values($sheet, 'B', $test, $scale->where('gruppo_scala_id', 4), $risultati);
@@ -546,7 +545,7 @@ class TestController extends Controller {
 		$sheet->setCellValue('A74', 'Pagina 4 di '.(count($item_critici)>0?'8':'7'));
 
 		// 5 Profilo delle Scale di Esternalizzazione, Interpersonali e Interessi
-		$sheet = $excel->getSheet(4);
+		$sheet = $this->excel->getSheet(4);
 	   	$this->set_header($sheet, $test);
     	// Valori
     	$this->set_values($sheet, 'B', $test, $scale->where('gruppo_scala_id', 6), $risultati);
@@ -556,85 +555,52 @@ class TestController extends Controller {
 		$sheet->setCellValue('A69', 'Pagina 5 di '.(count($item_critici)>0?'8':'7'));
 
 		// 6 Profilo delle Scale di Esternalizzazione, Interpersonali e Interessi
-		$sheet = $excel->getSheet(5);
+		$sheet = $this->excel->getSheet(5);
 	   	$this->set_header($sheet, $test);
     	// Valori
     	$this->set_values($sheet, 'C', $test, $scale->where('gruppo_scala_id', 9), $risultati);	
 		// Piedipagina
 		$sheet->setCellValue('A67', 'Pagina 6 di '.(count($item_critici)>0?'8':'7'));
 
-		// 7 Matrice delle Risposte
-		$sheet = $excel->getSheet(6);
-	   	$this->set_header($sheet, $test);
-    	// Valori
-    	$column='C';
-    	$maxColumn='V';
-    	$row=9;
-		foreach($risposte as $risposta){
-			if($column <= $maxColumn){
-				$sheet->setCellValue($column.$row, (is_null($risposta->valore) ? 0 :($risposta->valore==0?2:1)) );
-				$column++;
-			}
-			if($column>$maxColumn){
-				$column = 'C';
-				$row++;
-			}
-		}
-		// Piedipagina
-		$sheet->setCellValue('A63', 'Pagina 7 di '.(count($item_critici)>0?'8':'7'));
+		// Scrive la matrice delle Risposte
+		$this->writeMatrix($risposte);
 		
-		// 8 Item Critici
-		//$this->writeItemCritici($item_critici, $excel->getSheet(7));
-		if (count($item_critici)>0) {
-			$sheet = $excel->getSheet(7);
-			$this->set_header($sheet, $test);
+		// Item critici
+		$this->writeItemCritici($item_critici);
+
+		// Scrive la Validita
+		$this->writeValidita($this->getValidita($id));
+
+		// Scrive il Profilo
+		$this->writeProfilo($this->getProfilo($id));
 		
-			$row=10;
-			// Valori
-			foreach($scale as $scala) {
-		 		if(($scala->codice =='SUI') || ($scala->codice =='HLP')|| ($scala->codice =='AXY')|| ($scala->codice =='RC6')|| ($scala->codice =='RC8')|| ($scala->codice =='SUB')|| ($scala->codice =='AGG')) {
-			 		if( $risultati->where('codice_scala',$scala->codice)->first()->punteggio_t >= 65) {	  
-					  	$sheet->getStyle('B'.$row)->getFont()->setBold(TRUE);
-					  	$sheet->setCellValue('B'.$row, $scala->codice.' - '.$scala->descrizione);
-					  	$row++;
-			          foreach($item_critici as $item_critico) {
-				      	if($item_critico['codice'] == $scala->codice) {
-			              $sheet->setCellValue('A'.$row, $item_critico['item_id']);
-			              $sheet->setCellValue('B'.$row, $item_critico['testo'].' ('.$item_critico['risposta'].')');
-			              $row++;
-			            }
-			          }
-			          $row++;
-					}
-				}
-    		}	
-			// Piedipagina
-			$sheet->setCellValue('A69', 'Pagina 8 di '.(count($item_critici)>0?'8':'7'));
-		} else {
-			$excel->removeSheetByIndex(7);
-		}
+		// Scrive la cover
+		$this->writeCover($test);
+
+		$this->excel->setActiveSheetIndexByName('Cover');
 
 		$outputfilename = 'test_'.$test->cognome[0].$test->nome[0].$test->id.'.xlsx';
 		header("Content-Type: application/vnd.ms-excel");
 		header("Content-Disposition: attachment; filename=\"".$outputfilename."\"");
 		header("Cache-Control: max-age=0");
 
-		$writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');   
+		$writer = \PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');   
 		$writer->setIncludeCharts(TRUE);
 		$writer->save("php://output");
-		exit;
+		exit;*/
 	}
 
-	var $excel;
-
 	public function export2($id) {
+		$this->excel($id,2);
+	}
+
+	public function excel($id, $tipo) {
 		$test = Test::with('user')->findOrFail($id);
         $gruppi_scale = GruppoScala::all();
         $scale = Scala::all(); //->orderBy('ordine');
         $risultati = Risultato::where('test_id', $id)->get();
         $item_critici = $this->getItemCritici($test->id);
 		$risposte = Risposta::where('test_id', $id)->orderby('item_id')->get();
-
 
         // Legge il template
 		$fileName = public_path().'/template2.xlsx';
@@ -643,6 +609,25 @@ class TestController extends Controller {
 		$this->excel = new \PHPExcel();
 		$this->excel = $Reader->load($fileName);
 
+		if($tipo == '2')
+		{
+			$this->excel->removeSheetByIndex(6);
+			$this->excel->removeSheetByIndex(5);
+			$this->excel->removeSheetByIndex(4);
+			$this->excel->removeSheetByIndex(3);
+			$this->excel->removeSheetByIndex(2);
+		}
+		if($tipo == '1')
+		{
+			$this->excel->removeSheetByIndex(14);
+			$this->excel->removeSheetByIndex(13);
+			$this->excel->removeSheetByIndex(12);
+			$this->excel->removeSheetByIndex(11);
+			$this->excel->removeSheetByIndex(10);
+			$this->excel->removeSheetByIndex(9);
+			$this->excel->removeSheetByIndex(8);
+			$this->excel->removeSheetByIndex(7);
+		}
 
 		// Scrive intestazione e piedipagina
 		$this->writeHeader($test);
@@ -1022,7 +1007,8 @@ class TestController extends Controller {
 
 	public function writeTrueFalsePerc($risposte_date)
 	{
-		$sheet = $this->excel->getSheetByName('1');
+		// $sheet = $this->excel->getSheetByName('1');
+		$sheet = $this->excel->getSheet(2);
 		// Percentuale risposte Vero
     	$sheet->setCellValue('G48', round($risposte_date->where('valore',1)->count() * 100 / count($risposte_date),0));
     	// Percentuale risposte Falso
