@@ -658,7 +658,7 @@ class TestController extends Controller {
 		$this->excel->setActiveSheetIndexByName('Cover');
 
 		$outputfilename = 'test_'.mb_strtoupper($test->cognome[0].$test->nome[0],'UTF-8').$test->id;
-		header("Content-Type: application/vnd.ms-excel");
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header('Content-Disposition: attachment; filename="'.$outputfilename.'.xlsx"');
 		header("Cache-Control: max-age=0");
 
