@@ -672,7 +672,7 @@ class TestController extends Controller {
 	{
     	$sheet = $this->excel->getSheetByName('Cover');
     	
-    	$sheet->setCellValue('G17','Correzione manuale effettuata da '.$test->user->name);
+    	$sheet->setCellValue('K17','Correzione manuale effettuata da '.$test->user->name);
 		$sheet->setCellValue('G43', mb_strtoupper($test->cognome, 'UTF-8').', '.$test->nome);
     	$sheet->setCellValue('G45', $test->data_somministrazione);
     	$sheet->setCellValue('G47', $test->user->name);
