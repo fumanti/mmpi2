@@ -1,27 +1,19 @@
 <div class="container-fluid" style="margin-left:8px">
     <br>
-    <br>
-<!--     <div class="row-fluid">
-	  	<div class="well">
-	  		<span class="text-bold text-default">
-		    	{{$struttura["Sezioni"]["II"]["Sezione"]}}
-	  		</span>
-	  	</div> 
-    </div>  -->
+    <br> 	
     
-	@foreach($struttura["Sezioni"]["II"]["Sottosezioni"] as $s)
+	@foreach($profilo as $k => $s)
 	  	<br>
       	<div class="row-fluid">
 			<div class="panel panel-primary">
 		  		<div class="panel-heading">
-		    		<h3 class="panel-title">{{$s["Sottosezione"]}}</h3>
+		    		<h3 class="panel-title">{{$k}}</h3>
 		  		</div>
 		  		<div class="panel-body">
 	  		      	<div class="table-responsive">
 	        			<table id="testtable" class="table" style="margin-top:-1px">
 					      <tbody>
-							@foreach($s["Fonti"] as $gruppi)
-								@foreach($gruppi as $key => $value)
+								@foreach($s as $value)
 									@if( 	   
 										   (isset($value["personalita"]) && count($value["personalita"])) 	|| 
 										   (isset($value["correlati"]) && count($value["correlati"])) 		|| 
@@ -30,19 +22,9 @@
 								 		)
 							  			<tr>
 							  				<td>
-								  			<!-- <div class="col-lg-1">
-								  				<span class="text-center">
-								  					<b>{{$key}}</b>
-								  					<br><span> 
-								  						({{$value["punteggio"]}})
-								  					</span>
-								  				</span>
-								  			</div> -->
-								  			<!-- <div class="col-lg-11"> -->
-
 								  				<div class="row-fluid col-lg-12">
 								  					<div class="col-lg-12">
-								  						<h4>{{$key}} &minus; {{$value["descrizione"]}} ({{$value["punteggio"]}})</h4>
+								  						<h4>{{$value["codice"]}} &minus; {{$value["descrizione"]}} ({{$value["punteggio"]}})</h4>
 								  					</div>
 								  					<br><br>
 											        <div class="text-left col-lg-3 col-md-6" style="min-height:120px">
@@ -111,7 +93,7 @@
 								  		</tr>
 								  	@endif
 								@endforeach
-							@endforeach
+							
 						</tbody>
 						</table>
 			  		</div>

@@ -6,6 +6,7 @@ use App\Models\Test as Test;
 use App\Models\Risposta as Risposta;
 use App\Models\Risultato as Risultato;
 use App\Models\Scala as Scala;
+use App\Models\Sezione as Sezione;
 use App\Models\GruppoScala as GruppoScala;
 use App\Models\Condizione as Condizione;
 use App\Models\Item as Item;
@@ -165,7 +166,7 @@ class TestController extends Controller {
 			'risultati' => Risultato::where('test_id', $test->id)->get(),
 			'item_critici' => $this->getItemCritici($id),
 			'validita' => $this->getValidita($id),
-			'profilo' => $this->getProfilo($id)
+			'profilo' => $this->getProfilo($id, 'ordine1')
     	]);
     }
 
@@ -233,6 +234,23 @@ class TestController extends Controller {
 		return redirect('test');
 	}
 
+	public function profilo()
+    {
+		if(Request::ajax()) {
+          	$data = Input::all();
+          	$ordinamento = "ordine1";
+          	$test_id;
+          	if((array_key_exists('ordinamento', $data))){
+          		$ordinamento = $data['ordinamento'];
+          	}
+          	if((array_key_exists('test_id', $data))){
+          		$test_id = $data['test_id'];
+          	}
+	        $profilo = $this->getProfilo($test_id, $ordinamento);
+        	return view('risultati.profilo', compact('profilo')); //view('risultati.ajaxView')->with('risultati', $risultati);
+		}
+    }
+
 	public function getItemCritici($test_id)
 	{
 		$item_critici = array();
@@ -259,6 +277,7 @@ class TestController extends Controller {
 				}
 			}
 		}
+
 		// $return = collect($item_critici)->groupBy('codice');
 		return $item_critici;
 	}
@@ -338,7 +357,73 @@ class TestController extends Controller {
 		return $result;
 	}
 
-	public function getProfilo($test_id) //, $result)	// ex metodo unico
+	public function getProfilo($test_id, $sort) //, $result)	// ex metodo unico
+	{
+		// Impostare le scale appropriate
+		$risultati_test = Risultato::where('test_id', $test_id)->get();
+		
+		$found_res = array();
+		
+		$scale = Scala::all();
+		$result = array(); //["Sezioni" => $struttura["Sezioni"]];		
+
+		foreach (Profilo::getAll() as $scala => $item)
+		{
+
+		 	$p = $risultati_test->where('codice_scala', $scala)->first();
+
+		 	if(isset($p)) 
+		 	{
+			 	$punteggio = $p->punteggio_t;
+			 	
+				$personalita = $this->search_profile($item["personalita"], $test_id, $scala);
+				$correlati = $this->search_profile($item["correlati"], $test_id, $scala);
+				$diagnosi = $this->search_profile($item["diagnosi"], $test_id, $scala);
+				$trattamento = $this->search_profile($item["trattamento"], $test_id, $scala);
+				
+				if ( (isset($personalita) && count($personalita)) || (isset($correlati) && count($correlati)) || 
+					 (isset($diagnosi) && count($diagnosi)) || (isset($trattamento) && count($trattamento)) )
+				{
+					$found_res[$scala] = array(
+						"codice" => $scala,
+						"descrizione" => $scale->where('codice', $scala)->first()->descrizione,
+						
+						"sezione" => $scale->where('codice', $scala)->first()->sezione->descrizione,
+						
+						"gruppo" => $scale->where('codice',$scala)->first()->gruppo_scala->descrizione,
+						"punteggio" => $punteggio, 
+						"personalita" => $personalita, 
+						"correlati" => $correlati,
+						"diagnosi" => $diagnosi,
+						"trattamento" => $trattamento
+					);
+				}
+			}
+		}
+
+		// foreach ($struttura["Sezioni"]["II"]["Sottosezioni"] as $key => $value) {
+		// 	$keep = false;
+		// 	foreach ($value["Fonti"] as $gruppi => $g) {
+		// 		foreach ($g as $k => $v) {
+		// 			if(array_key_exists($k, $found_res)){
+		// 				$result["Sezioni"]["II"]["Sottosezioni"][$key]["Fonti"][$gruppi][$k] = $found_res[$k];
+		// 				$keep = true;
+		// 			}
+		// 		}
+		// 	}
+		// 	// Cancella la sottosezione se nessuna scala è stata valorizzata
+		// 	if(!$keep)
+		// 		unset($result["Sezioni"]["II"]["Sottosezioni"][$key]);
+		// }
+
+		// return $result;
+		if($sort == 'ordine1')
+			return collect($found_res)->groupBy('gruppo');
+		else
+			return collect($found_res)->groupBy('sezione');
+	}
+
+	public function getProfiloOld($test_id) //, $result)	// ex metodo unico
 	{
 		// Impostare le scale appropriate
 		$risultati_test = Risultato::where('test_id', $test_id)->get();
@@ -369,6 +454,9 @@ class TestController extends Controller {
 				{
 					$found_res[$scala] = array(
 						"descrizione" => $scale->where('codice',$scala)->first()->descrizione,
+						
+						"gruppo" => $scale->where('codice',$scala)->first()->gruppo_scala_id,
+						"descrizione_gruppo" => $scale->where('codice',$scala)->first()->gruppo_scala->descrizione,
 						"punteggio" => $punteggio, 
 						"personalita" => $personalita, 
 						"correlati" => $correlati,
@@ -392,12 +480,10 @@ class TestController extends Controller {
 			// Cancella la sottosezione se nessuna scala è stata valorizzata
 			if(!$keep)
 				unset($result["Sezioni"]["II"]["Sottosezioni"][$key]);
-
 		}
 
 		return $result;
 	}
-
 
 
 	public function search_profile($input, $test_id, $scala)
@@ -646,7 +732,7 @@ class TestController extends Controller {
 		$this->writeValidita($this->getValidita($id));
 
 		// Scrive il Profilo
-		$this->writeProfilo($this->getProfilo($id));
+		$this->writeProfilo($this->getProfilo($id, 'ordine'.$tipo));
 		
 		// Risposte date Vero Falso
 		$risposte_date = Risposta::where('test_id', $test->id)->whereIn('valore', [0,1])->get();
@@ -813,18 +899,17 @@ class TestController extends Controller {
 		// Riga iniziale
 		$row = 3;
 
-		foreach($profilo["Sezioni"]["II"]["Sottosezioni"] as $s)
+		foreach($profilo as $k => $s)
 		{
 			// Titolo 
-			$sheet->setCellValue('A'.$row, mb_strtoupper($s["Sottosezione"], 'UTF-8'));
+			$sheet->setCellValue('A'.$row, mb_strtoupper($k, 'UTF-8'));
 			$this->font($sheet->getStyle('A'.$row), ["size"=>14, "bold"=>true]);
 
 			$row++;
 			$row++;
 			// Contenuto scale
-			foreach($s["Fonti"] as $gruppi) 
-			{
-				foreach($gruppi as $key => $value)
+
+				foreach($s as $value)
 				{
 					if((isset($value["personalita"]) && count($value["personalita"])) 	|| 
 					   (isset($value["correlati"]) && count($value["correlati"])) 		|| 
@@ -832,7 +917,7 @@ class TestController extends Controller {
 					   (isset($value["trattamento"]) && count($value["trattamento"])) 	)
 					{
 						// Scala
-						$scala = mb_strtoupper($key, 'UTF-8')."  −  ".mb_strtoupper($value["descrizione"], 'UTF-8')." (".mb_strtoupper($value['punteggio'], 'UTF-8').")";
+						$scala = mb_strtoupper($value["codice"], 'UTF-8')."  −  ".mb_strtoupper($value["descrizione"], 'UTF-8')." (".mb_strtoupper($value['punteggio'], 'UTF-8').")";
 						$sheet->setCellValue('B'.$row, $scala);
 						$this->font($sheet->getStyle('B'.$row), ["bold"=>true]);
 						$this->border($sheet->getStyle('B'.$row.":C".$row), "bottom", "medium");
@@ -923,7 +1008,7 @@ class TestController extends Controller {
 					}
 
 				}
-			}
+			
 		}
 	}
 

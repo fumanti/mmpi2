@@ -32,7 +32,7 @@ Route::controllers([
 
 Route::get('/profilo/{id}', 'TestController@getProfilo');
 
-// Route::get('/validita/{id}', 'TestController@getValidita');
+Route::get('/validita/{id}', 'TestController@getValidita');
 
 
 Route::post('test', ['middleware'=>'auth', 'uses'=>'TestController@getList']);
@@ -59,6 +59,7 @@ Route::post('test/paziente',['middleware'=>'auth', 'uses'=>'TestController@updat
 Route::post('test/risposte', ['middleware'=>'auth', 'uses'=>'RisposteController@update']);
 Route::post('test/risultati', ['middleware'=>'auth', 'uses'=>'RisultatiController@update']);
 Route::post('test/item_critici', ['middleware'=>'auth', 'uses'=>'RisultatiController@item_critici']);
+Route::post('test/profilo', ['middleware'=>'auth', 'uses'=>'TestController@profilo']);
 Route::post('test/{id}', ['middleware'=>'auth', 'uses'=>'RisultatiController@store']);
 Route::get('risultati/{id}', ['middleware'=>'auth', 'uses'=>'RisultatiController@index']);
 

@@ -1,4 +1,4 @@
-<?php
+/*<?php
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('ConversioneTableSeeder');
 		$this->command->info('Conversione table!');
-
 	}
 
 }
 
+*/

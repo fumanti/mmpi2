@@ -37,7 +37,7 @@
 			  		 @include('risultati/validita', ['test'=>$test, 'struttura'=>$validita, 'scale'=>$scale])
 			  		</div>
 			  		<div class="tab-pane" id="profilo">
-			  		 @include('risultati/profilo', ['test'=>$test, 'struttura'=>$profilo, 'scale'=>$scale])	
+			  		 @include('risultati/profilo', ['test'=>$test, 'profilo'=>$profilo, 'scale'=>$scale])	
 			  		</div>
 			  		<div class="tab-pane" id="item_critici">
 			  		 @include('risultati/item_critici' , ['item_critici'=>$item_critici])
@@ -243,6 +243,21 @@
 	  });
 	}
 
+	function getProfilo(test_id, ordinamento, token){
+  		$.ajax({
+	    url: 'profilo',
+	    type: "post",
+        data: {
+          'test_id': test_id,
+          'ordinamento': ordinamento,
+          '_token': token
+        }
+        ,success: function(profilo){
+			$('#profilo').html(profilo);
+        }
+	  });
+	}
+
 	function setNext(e){
 		var $n = $('input:text.ph').length;
   		$nextIndex = $('input:text.ph').index(e)+1;
@@ -270,17 +285,21 @@
    	  //    }
       $(event.target).closest('.btn-group').find('[data-bind="label"]').text($(event.target).text());
       $.blockUI();
+      test_id = $('input[name=test_id]').val();
+      ordinamento = $(event.target).attr('id');
+      token = $('input[name=_token]').val();
 	  $.ajax({
 	    url: 'risultati',
 	    type: "post",
         data: {
-          'test_id': $('input[name=test_id]').val(),
-          'ordinamento': $(event.target).attr('id'),
-          '_token': $('input[name=_token]').val()
+          'test_id': test_id,
+          'ordinamento': ordinamento,
+          '_token': token
         }
         ,success: function(risultati){
           $('#risultati').html(risultati);
           $.unblockUI();
+          getProfilo(test_id, ordinamento, token);
         }
 	  });
     });

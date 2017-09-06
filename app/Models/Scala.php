@@ -17,12 +17,17 @@ class Scala extends Model {
      */
 	public $timestamps = false;
 
-    public $fillable = ['id', 'codice', 'gruppo_scala_id', 'ordine', 'descrizione', 'media', 'deviazione_standard', 'punteggio_base'];
+    public $fillable = ['id', 'codice', 'sezione_id', 'gruppo_scala_id', 'ordine', 'descrizione', 'media', 'deviazione_standard', 'punteggio_base'];
 
 
 	public function gruppo_scala()
     {
         return $this->belongsTo('App\Models\GruppoScala');
+    }
+
+    public function sezione()
+    {
+        return $this->belongsTo('App\Models\Sezione');
     }
 
     public function condizioni()

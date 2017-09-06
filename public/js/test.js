@@ -48,32 +48,32 @@ function changeIcons(id, dir) {
 
 $(function(){
     $(document.body).on('click', '#menu_test li', function(event) {  
-	  setOwner(event.target.id);
+	   setOwner(event.target.id);
     });
     
     $(document).ready(function(event) {
-	  if($('#testtable thead a.sort span[class!="fa fa-sort"]').attr('id')===undefined){
-	  	changeIcons('id', 'asc');
-	  }
+  	  if($('#testtable thead a.sort span[class!="fa fa-sort"]').attr('id')===undefined){
+  	  	changeIcons('id', 'asc');
+  	  }
     });
 
-	$(document.body).on('click', '#search', function( event ) {
-		$('#txtSearch').focus();
+    $(document.body).on('click', '#search', function( event ) {
+		  $('#txtSearch').focus();
     });
 
-	$(document.body).on('keyup', '#txtSearch', function( event ) {
-	 	if(event.which==13){
- 			event.preventDefault();
-		} else {
-			getList();
+    $(document.body).on('keyup', '#txtSearch', function( event ) {
+      if(event.which==13){
+        event.preventDefault();
+  		} else {
+        getList();
 	  	}
     });
 
     $(document.body).on('click', '.pagination a', function(e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        var url = $(this).attr('href');
-        getList(url);
+      var url = $(this).attr('href');
+      getList(url);
     });
 
     $(document.body).on('click', '#testtable thead a.sort', function(e) {
