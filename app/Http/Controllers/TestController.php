@@ -291,6 +291,11 @@ class TestController extends Controller {
 		->whereIn("codice_scala", ['CNS', 'VRIN-r', 'TRIN-r', 'F-r', 'Fp-r', 'Fs', 'FBS-r', 'RBS', 'L-r', 'K-r'])
 		->get();
 		
+		if($risultati_test->count()==0)
+		{
+			return NULL;
+		}
+
 		$scale = Scala::all();
 		$struttura = Struttura::getAll();
 		$result = ["Sezioni" => $struttura["Sezioni"]];
@@ -299,7 +304,6 @@ class TestController extends Controller {
 		$interpretazione = Interpretazione::getAll();
 		$found_res = array();
 		
-
 
 		foreach ($validita as $scala => $item) 
 		{
@@ -328,7 +332,7 @@ class TestController extends Controller {
 				}
 			}
 		}
-		
+
 		foreach ($struttura["Sezioni"]["I"]["Sottosezioni"] as $key => $value) {
 			$max = 0;
 			foreach ($value["Fonti"] as $gruppi => $g) {
@@ -357,7 +361,69 @@ class TestController extends Controller {
 		return $result;
 	}
 
-	public function getProfilo($test_id, $sort) //, $result)	// ex metodo unico
+	public function getValiditaNew($test_id) //, $result)	// ex metodo unico
+	{
+		// Risultati del test
+		$risultati_test = Risultato::where('test_id', $test_id)
+		->whereIn("codice_scala", ['CNS', 'VRIN-r', 'TRIN-r', 'F-r', 'Fp-r', 'Fs', 'FBS-r', 'RBS', 'L-r', 'K-r'])
+		->get();
+		
+		$scale = Scala::all();
+		//$struttura = Struttura::getAll();
+		//$result = ["Sezioni" => $struttura["Sezioni"]];
+		
+		$interpretazione = Interpretazione::getAll();
+		$found_res = array();
+		
+
+
+		foreach (Validita::getAll() as $scala => $item) 
+		{
+		 	$p = $risultati_test->where('codice_scala', $scala)->first();
+		 	if($p != null)
+		 	{
+			 	$punteggio = $scala != "CNS" ? $p->punteggio_t : $p->punteggio_grezzo;
+				
+				foreach ($item as $i) 
+				{
+					if((!array_key_exists("min", $i["range"]) || $i["range"]["min"] <= $punteggio) 
+					&& (!array_key_exists("max", $i["range"]) || $i["range"]["max"] >= $punteggio))
+					{						
+						$found_res[$scala] = 
+						[
+							"codice" => $scala,
+							"descrizione" => $scale->where('codice',$scala)->first()->descrizione,
+							"sezione" => $scale->where('codice', $scala)->first()->sezione->descrizione,
+							"punteggio" => $punteggio, 
+							"risultato" => $i["risultato"],
+							"minacce" => $i["minacce"], 
+							"motivo" => $i["motivo"],
+							"implicazioni" => $i["implicazioni"] 
+						];
+						break;
+					}
+				}
+			}
+		}
+
+		
+		$result = collect($found_res)->groupBy('sezione');
+
+		foreach ($result as $key => $value) {
+			$max = 0;
+			foreach ($value as $v) {
+				$max = ($v["risultato"] > $max) ? $v["risultato"] : $max;
+			}
+			// Prende sempre il valore massimo
+			$r[$key] = ["interpretazione" => $max, "messaggio" => $interpretazione[$max]];
+		}
+
+		$merged = array_merge_recursive($result->toArray(), $r);
+		return $merged;
+	}
+
+
+	public function getProfilo($test_id, $sort = 'ordine1') //, $result)	// ex metodo unico
 	{
 		// Impostare le scale appropriate
 		$risultati_test = Risultato::where('test_id', $test_id)->get();
@@ -365,7 +431,7 @@ class TestController extends Controller {
 		$found_res = array();
 		
 		$scale = Scala::all();
-		$result = array(); //["Sezioni" => $struttura["Sezioni"]];		
+		// $result = array(); //["Sezioni" => $struttura["Sezioni"]];		
 
 		foreach (Profilo::getAll() as $scala => $item)
 		{

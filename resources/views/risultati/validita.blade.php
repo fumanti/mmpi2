@@ -1,18 +1,9 @@
 <div class="container-fluid" style="margin-left:8px">
     <br>
     <br>
-<!--     <div class="row-fluid">
-	  	<div class="well">
-	  		<span class="text-bold text-default">
-		    	{{$struttura["Sezioni"]["I"]["Sezione"]}}
-		    	@foreach($struttura["Sezioni"]["I"]["messaggio"] as $m)
-		    		<p>{{$m}}</p>
-		    	@endforeach
-	  		</span>
-	  	</div> 
-    </div>  -->
-    
-	@foreach($struttura["Sezioni"]["I"]["Sottosezioni"] as $s)
+
+    @if($validita)
+	@foreach($validita["Sezioni"]["I"]["Sottosezioni"] as $s)
 	  	<br/>
       	<div class="row-fluid">
 			<div class="panel panel-{{$s["interpretazione"]==0?'success':($s["interpretazione"]==4?'danger':'warning')}}">
@@ -76,7 +67,7 @@
 	    	</div>
 	  	</div>
 	@endforeach
-  	
+  	@endif
   	<div class="row">
     	<br>
   	</div>   

@@ -34,13 +34,13 @@
 			  		 @include('risultati/index', ['test'=>$test, 'gruppi_scale'=>$gruppi_scale, 'scale'=>$scale])
 			  		</div>
 			  		<div class="tab-pane" id="validita">
-			  		 @include('risultati/validita', ['test'=>$test, 'struttura'=>$validita, 'scale'=>$scale])
+			  		 @include('risultati/validita', ['test'=>$test, 'validita'=>$validita, 'scale'=>$scale])
 			  		</div>
 			  		<div class="tab-pane" id="profilo">
 			  		 @include('risultati/profilo', ['test'=>$test, 'profilo'=>$profilo, 'scale'=>$scale])	
 			  		</div>
 			  		<div class="tab-pane" id="item_critici">
-			  		 @include('risultati/item_critici' , ['item_critici'=>$item_critici])
+			  		 @include('risultati/item_critici', ['item_critici'=>$item_critici])
 			  		</div>
 			  		<div class="{{$test->risultati->count()==0?'tab-pane active':'tab-pane'}}" id="risposte">
 			  		 @include('risposte/index', ['test'=> $test, 'risposte' => $risposte])
