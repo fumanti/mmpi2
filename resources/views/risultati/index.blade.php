@@ -63,7 +63,7 @@
 			          <td class="text-left col-md-1">% Risp.</td>
 			          @foreach($gruppo_scala->scale as $scala)
 			          <td class="text-right">
-			          	@if($test->risultati->where('codice_scala',$scala->codice)->count()) 
+			          	@if($scala->codice != 'CNS' && $test->risultati->where('codice_scala',$scala->codice)->count()) 
 			          	  {{ $test->risultati->where('codice_scala',$scala->codice)->first()->percentuale_risposte }}
 			          	@endif&nbsp;
 			          </td>
