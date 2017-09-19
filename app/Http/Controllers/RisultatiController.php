@@ -187,7 +187,7 @@ class RisultatiController extends Controller {
 			// Imposta a 2 il valore in caso di valore null
 			$valoreRisposta = is_null($risposta->valore) ? 2 : $risposta->valore;
 
-			if($risposta->valore == $condizione->valore_richiesto) 
+			if($risposta->valore === $condizione->valore_richiesto) 
 			{
 				if($condizione->set==0)
 				{
@@ -201,7 +201,7 @@ class RisultatiController extends Controller {
 					if(!(is_null($condizione2)))
 					{
 						$risposta2 = Risposta::where(['test_id'=> $test_id, 'item_id'=> $condizione2->item_id])->first();
-						if( $risposta2->valore == $condizione2->valore_richiesto) 
+						if( $risposta2->valore === $condizione2->valore_richiesto) 
 						{
 							$punteggio_g += $condizione->punteggio_assegnato;
 						}
