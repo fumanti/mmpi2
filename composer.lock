@@ -3897,7 +3897,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-mcrypt": "^0.0.0"
+        
     },
     "platform-dev": []
 }
