@@ -20,14 +20,14 @@ class Encrypter implements EncrypterContract {
 	 *
 	 * @var string
 	 */
-	protected $cipher = MCRYPT_RIJNDAEL_128;
+	protected $cipher = 'MCRYPT_RIJNDAEL_128';
 
 	/**
 	 * The mode used for encryption.
 	 *
 	 * @var string
 	 */
-	protected $mode = MCRYPT_MODE_CBC;
+	protected $mode = 'MCRYPT_MODE_CBC';
 
 	/**
 	 * The block size of the cipher.
